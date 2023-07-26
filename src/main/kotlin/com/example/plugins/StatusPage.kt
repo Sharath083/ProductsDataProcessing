@@ -1,33 +1,41 @@
 package com.example.plugins
 
 import com.example.data.request.RequestQuery
-import com.example.exception.ProductNotFoundException
+import com.example.data.request.UpdateProperties
+import com.example.data.response.Output
+import com.example.exception.InvalidRequestType
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import org.apache.hc.core5.http.protocol.RequestValidateHost
-import java.lang.NumberFormatException
+
 
 fun Application.configureStatusPage() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
-//        exception<ProductNotFoundException> {call,cause->
-//            call.respondText(text = "404: $cause  ${cause.msg}" , status = HttpStatusCode.InternalServerError)
-//        }
-//        exception<NumberFormatException> {call,cause->
-//            call.respondText(text = "404: $cause  Invlid Input" , status = HttpStatusCode.InternalServerError)
-//        }
+        exception<RequestValidationException> { call, cause ->
+            call.respondText(text="$cause ${cause.reasons.joinToString()}",status=HttpStatusCode.BadRequest,)
+        }
+        exception<InvalidRequestType> { call, cause ->
+            call.respond(Output("$cause ${cause.msg}",HttpStatusCode.InternalServerError.toString()))
+        }
     }
 }
 fun Application.configRequestValidation() {
     install(RequestValidation) {
         validate<RequestQuery> {
             if (it.query == "" || it.query == null ) {
-                ValidationResult.Invalid("Give The Proper Query")
+                throw InvalidRequestType("Give Proper Input")
+            } else {
+                ValidationResult.Valid
+            }
+        }
+        validate<UpdateProperties> {
+            if ( it.id == null ) {
+                throw InvalidRequestType("Give Proper Input")
             } else {
                 ValidationResult.Valid
             }

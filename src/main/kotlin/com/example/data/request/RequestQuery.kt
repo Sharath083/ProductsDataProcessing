@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class RequestQuery (val query:String)
+data class RequestQuery (val query:String?)

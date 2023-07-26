@@ -8,7 +8,7 @@ object PropertiesDao : Table("details_table") {
 
     val id = integer("id")
     val title = varchar("title", 128)
-    val body = varchar("description", 1024)
+    val description = varchar("description", 1024)
     val price=integer("price")
     val discountPercentage=double("discountPercentage")
     val rating=double("rating")
