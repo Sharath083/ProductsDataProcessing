@@ -3,8 +3,8 @@ package com.example.routes
 import com.example.data.request.RequestQuery
 import com.example.data.request.UpdateProperties
 
-import com.example.logic.DaoQueryImpl
-import com.example.logic.Methods
+import com.example.repository.DaoQueryImpl
+import com.example.repository.Methods
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

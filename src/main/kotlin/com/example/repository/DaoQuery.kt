@@ -1,9 +1,7 @@
-package com.example.logic
+package com.example.repository
 
 import com.example.data.request.UpdateProperties
-import com.example.data.response.Properties
 import com.example.data.response.Output
-import com.example.data.response.OutputList
 
 interface DaoQuery {
 

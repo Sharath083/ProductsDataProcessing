@@ -1,4 +1,4 @@
-package com.example.logic
+package com.example.repository
 
 import com.example.dao.DatabaseFactory
 import com.example.dao.PropertiesDao
@@ -9,17 +9,15 @@ import com.example.data.response.OutputList
 import com.example.exception.ProductNotFoundException
 import io.ktor.http.*
 import io.ktor.server.plugins.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.lang.NumberFormatException
-import java.sql.SQLException
 import java.util.InputMismatchException
 
 
 class DaoQueryImpl : DaoQuery {
+
     override suspend fun insertIntoTable(input: Products): Output {
         return try {
             DatabaseFactory.dbQuery {
@@ -38,7 +36,6 @@ class DaoQueryImpl : DaoQuery {
                         it[images] = (inList.images).toString()
                     }
                 }
-
             }
             Output("Data Has Inserted ",HttpStatusCode.Accepted.toString())
         }catch (e:Exception){
@@ -125,16 +122,19 @@ class DaoQueryImpl : DaoQuery {
         return try {
             val result=DatabaseFactory.dbQuery {
                 PropertiesDao.update({ PropertiesDao.id eq input.id!! }) {
-                    if (input.title !== null) it[title] = input.title!!
-                    if (input.description !== null) it[description] = input.description!!
-                    if (input.price !== null) it[price] = input.price!!
-                    if (input.discountPercentage !== null) it[discountPercentage] = input.discountPercentage!!
-                    if (input.rating !== null) it[rating] = input.rating!!
-                    if (input.stock !== null) it[stock] = input.stock!!
-                    if (input.brand !== null) it[brand] = input.brand!!
-                    if (input.category !== null) it[category] = input.category!!
-                    if (input.thumbnail !== null) it[thumbnail] = input.thumbnail!!
-                    if (input.images !== null) it[images] = input.images.toString()
+                    when{
+                        input.title !== null -> it[title] = input.title
+                        input.description !== null-> it[description] = input.description
+                        input.price !== null -> it[price] = input.price
+                        input.discountPercentage !== null -> it[discountPercentage] = input.discountPercentage
+                        input.rating !== null -> it[rating] = input.rating
+                        input.stock !== null -> it[stock] = input.stock
+                        input.brand !== null -> it[brand] = input.brand
+                        input.category !== null  ->it[category] = input.category
+                        input.thumbnail !== null -> it[thumbnail] = input.thumbnail
+                        input.images !== null -> it[images] = input.images.toString()
+
+                    }
                 }
             } > 0
             if (result){

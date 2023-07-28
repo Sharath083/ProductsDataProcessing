@@ -15,12 +15,11 @@ object DatabaseFactory {
         Database.connect(url, driver, user, password)
 
         transaction {
-            SchemaUtils.create(PropertiesDao)
-//            SchemaUtils.createMissingTablesAndColumns(Users)
-//            SchemaUtils.createMissingTablesAndColumns(Posts)
-//            SchemaUtils.createMissingTablesAndColumns(Profiles)
-//            SchemaUtils.createMissingTablesAndColumns(Categories)
-//            SchemaUtils.createMissingTablesAndColumns(PostCategories)
+//            SchemaUtils.create(PropertiesDao)
+            SchemaUtils.create(UserTable)
+            SchemaUtils.create(ContactTable)
+
+
         }
     }
     suspend fun <T> dbQuery(block: () -> T): T =

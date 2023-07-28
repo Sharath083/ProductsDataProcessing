@@ -4,15 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateProperties(
-    var id:Int?=null,
-    var title: String? =null,
-    var description:String? =null,
-    var price:Int? =null,
-    var discountPercentage:Double? =null,
-    var rating:Double? =null,
-    var stock:Int? =null,
-    var brand:String? =null,
-    var category:String? =null,
-    var thumbnail:String? =null,
-    var images: List<String>? =null
+    val id:Int?=null,
+    val title: String? =null,
+    val description:String? =null,
+    val price:Int? =null,
+    val discountPercentage:Double? =null,
+    val rating:Double? =null,
+    val stock:Int? =null,
+    val brand:String? =null,
+    val category:String? =null,
+    val thumbnail:String? =null,
+    val images: List<String>? =null
 )
