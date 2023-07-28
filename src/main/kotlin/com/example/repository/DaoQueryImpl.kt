@@ -70,19 +70,12 @@ class DaoQueryImpl : DaoQuery {
     }
 
     override suspend fun searchProduct(input: String):Any {
-        val queryData = mutableListOf<Properties>()
         return try {
-            DatabaseFactory.dbQuery {
-                val products = PropertiesDao.selectAll().map { resultRowToProperties(it) }
-                products.map {
-                    if ((it.title.equals(input, true)) || it.description.contains(input, true)) {
-                        queryData.add(it)
-                        println(queryData)
-                    }
-                }
+            val products =DatabaseFactory.dbQuery {
+                PropertiesDao.selectAll().map { resultRowToProperties(it) }.filter { (it.title.equals(input, true)) || it.description.contains(input, true) }
             }
-            if (queryData.isNotEmpty()){
-                OutputList(queryData,HttpStatusCode.Accepted.toString())
+            if (products.isNotEmpty()){
+                OutputList(products,HttpStatusCode.Accepted.toString())
             }
             else
                 throw ProductNotFoundException("No Product Matches With The Given Input")
@@ -94,8 +87,6 @@ class DaoQueryImpl : DaoQuery {
                 else -> Output("System Error",HttpStatusCode.allStatusCodes.toString())
             }
         }
-
-
     }
 
     override suspend fun fetchByCategory(input: String): Any  {
@@ -153,8 +144,6 @@ class DaoQueryImpl : DaoQuery {
             }
         }
     }
-
-
     private fun resultRowToProperties(row: ResultRow): Properties {
         return  Properties(row[PropertiesDao.id], row[PropertiesDao.title], row[PropertiesDao.description], row[PropertiesDao.price],
             row[PropertiesDao.discountPercentage],row[PropertiesDao.rating],row[PropertiesDao.stock],
